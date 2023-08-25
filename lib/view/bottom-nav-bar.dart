@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:notes/utils/app-theme.dart';
+import 'package:notes/config/app-theme.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 import 'collection-screen.dart';
-import 'note-screen.dart';
+import 'notes/note-screen.dart';
 
 class BottomNavBar extends StatelessWidget {
   // MainApp({required Key key}) : super(key: key);

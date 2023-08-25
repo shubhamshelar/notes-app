@@ -1,37 +1,81 @@
 import 'package:flutter/material.dart';
-import 'package:notes/utils/app-theme.dart';
-import 'package:notes/view/create-note-screen.dart';
-import 'package:notes/view/note-detail-screen.dart';
+import 'package:notes/config/app-theme.dart';
+import 'package:notes/view/notes/create-note-screen.dart';
+import 'package:notes/view/notes/note-detail-screen.dart';
+import 'package:provider/provider.dart';
 
-class NotesScreen extends StatelessWidget {
+import '../../model/note.dart';
+import '../../provider/note_provider.dart';
+
+class NotesScreen extends StatefulWidget {
+  @override
+  State<NotesScreen> createState() => _NotesScreenState();
+}
+
+class _NotesScreenState extends State<NotesScreen> {
   @override
   Widget build(BuildContext context) {
+    NoteProvider noteProvider = Provider.of<NoteProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('Notes'),
       ),
-      body: ListView.builder(
-        itemCount: 10, // Replace with your actual note count
-        itemBuilder: (context, index) {
-          return Card(
-            child: ListTile(
-              title: Text('Note Title'),
-              subtitle: Text('Note Preview'),
-              trailing: Text('Date/Time'),
-              // Replace with note date/time
-              onTap: () {
-                // Navigate to the note details screen
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => NoteDetailScreen(),
+      body: noteProvider.notes.length > 0
+          ? ListView.builder(
+              itemCount: noteProvider.notes.length,
+              itemBuilder: (context, index) {
+                Note curnote = noteProvider.notes[index];
+                return Card(
+                  child: InkWell(
+                    onTap: () {
+                      // Navigate to the note details screen
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => NoteDetailScreen(),
+                        ),
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            curnote.title!,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 25,
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            curnote.content!,
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(color: Colors.grey[700]),
+                          ),
+                          SizedBox(height: 8),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text(
+                                (curnote.timeStamp)!.day == DateTime.now().day
+                                    ? "${(curnote.timeStamp)!.hour}:${(curnote.timeStamp)!.minute}"
+                                    : (curnote.timeStamp)!.day.toString(),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 );
               },
-            ),
-          );
-        },
-      ),
+            )
+          : Center(child: Text('No Notes Avilable')),
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppTheme.primaryColor,
         onPressed: () {

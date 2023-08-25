@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:notes/provider/note_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
+
+import '../../model/note.dart';
 
 class CreateNoteScreen extends StatefulWidget {
   final noteId;
@@ -29,7 +34,19 @@ class _CreateNoteScreenState extends State<CreateNoteScreen> {
 
   void _saveNote() {
     // Implement your save logic here
-    // You can access the entered title, note, and selected collection using _titleController.text, _noteController.text, and _selectedCollection respectively
+    var uuid = Uuid();
+    Note note = Note(
+        title: _titleController.text ?? 'no title',
+        note_id: uuid.v1(),
+        user_id: 'shubhamshelarpatil@gmail.com',
+        content: _noteController.text ?? "no content",
+        note_collection: _selectedCollection ?? "other",
+        timeStamp: DateTime.now());
+    NoteProvider noteProvider =
+        Provider.of<NoteProvider>(context, listen: false);
+
+    noteProvider.addNote(note);
+    Navigator.pop(context);
   }
 
   void _showSaveConfirmationDialog(BuildContext context) {
@@ -102,6 +119,7 @@ class _CreateNoteScreenState extends State<CreateNoteScreen> {
 
   @override
   Widget build(BuildContext context) {
+    NoteProvider noteProvider = Provider.of<NoteProvider>(context);
     return WillPopScope(
       onWillPop: () async {
         if (_titleController.text.isNotEmpty ||
@@ -127,7 +145,7 @@ class _CreateNoteScreenState extends State<CreateNoteScreen> {
           ),
           actions: [
             IconButton(
-              icon: Icon(Icons.save),
+              icon: Icon(Icons.check),
               onPressed: _saveNote,
             ),
           ],

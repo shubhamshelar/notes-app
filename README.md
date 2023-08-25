@@ -1,6 +1,6 @@
 # Notes
 
->> Flutter as frontend
->> Nodejs as Backened
->> MangoDB as Database
+1) Flutter as Frontend
+2) Nodejs as Backend
+3) MongoDB as Database
 

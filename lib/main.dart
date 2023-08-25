@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:notes/utils/app-theme.dart';
+import 'package:notes/provider/note_provider.dart';
+import 'package:notes/config/app-theme.dart';
 import 'package:notes/view/bottom-nav-bar.dart';
 import 'package:notes/view/collection-screen.dart';
-import 'package:notes/view/create-note-screen.dart';
-import 'package:notes/view/note-screen.dart';
+import 'package:notes/view/notes/create-note-screen.dart';
+import 'package:notes/view/notes/note-screen.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,15 +16,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: AppTheme.myTheme,
-      routes: {
-        '/': (context) => SplashScreen(),
-        '/notes': (context) => NotesScreen(),
-        '/createNote': (context) => CreateNoteScreen(),
-        '/collection': (context) => CollectionScreen(),
-      },
-      initialRoute: '/',
+    return MultiProvider(
+      providers: [ChangeNotifierProvider(create: (context) => NoteProvider())],
+      child: MaterialApp(
+        theme: AppTheme.myTheme,
+        routes: {
+          '/': (context) => SplashScreen(),
+          '/notes': (context) => NotesScreen(),
+          '/createNote': (context) => CreateNoteScreen(),
+          '/collection': (context) => CollectionScreen(),
+        },
+        initialRoute: '/',
+      ),
     );
   }
 }
